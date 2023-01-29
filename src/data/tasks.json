@@ -1,0 +1,23 @@
+{
+    "toDoTasks" : [
+        {
+            "id": 1,
+            "description": "Estudiar React",
+            "backgroundColor": "#31d2f2"
+        }
+    ],
+    "inProgressTasks": [
+        {
+            "id": 1,
+            "description": "Proyecto Diseño de interfaces web",
+            "backgroundColor": "#31d2f2"
+        }
+    ],
+    "doneTasks" : [
+        {
+            "id": 1,
+            "description": "Proyecto Kanban",
+            "backgroundColor": "#31d2f2"
+        }
+    ]
+}

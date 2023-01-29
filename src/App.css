@@ -1,0 +1,37 @@
+.card {
+    height: 150px;
+}
+
+#colorInput {
+    width: 100px;
+    height: 37px;
+    padding: 5px;
+}
+
+.container {
+    background-color: rgba(0, 0, 0, 0.555);
+    backdrop-filter: blur(10px) !important;
+    border-radius: 20px;
+}
+
+.delimiter {
+    border-right: 1px solid rgba(210, 210, 210, 0.201);
+}
+
+#descriptionInput {
+    width: 500px;
+}
+
+#header {
+    background-color: rgba(0, 0, 0, 0.555);
+    backdrop-filter: blur(10px) !important;
+    color: white;
+}
+
+hr {
+    color: white;
+}
+
+.tittle {
+    color: white !important;
+}
