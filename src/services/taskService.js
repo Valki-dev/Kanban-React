@@ -1,3 +1,4 @@
+const endpoint = "http://localhost:3000";
 const toDoEndpoint = "http://localhost:3000/toDoTasks";
 const inProgressEndpoint = "http://localhost:3000/inProgressTasks";
 const doneEndpoint = "http://localhost:3000/doneTasks";
@@ -32,7 +33,7 @@ const getAllDoneTasks = () => {
         .then(response => response.json())
 }
 
-const createTask = (task) => {
+const addTask = (task, route) => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -45,40 +46,24 @@ const createTask = (task) => {
         redirect: 'follow'
     };
 
-    fetch(toDoEndpoint, requestOptions)
+    fetch(endpoint + route, requestOptions)
         .then(response => response.json())
         .then(result => console.log(result))
         .catch(error => console.log('error', error));
 }
 
-const deleteTask = (id, type) => {
+const deleteTask = (id, route) => {
     var requestOptions = {
         method: 'DELETE',
         redirect: 'follow'
     };
 
-    switch (type) {
-        case "toDo":
-            fetch(toDoEndpoint + "/" + id, requestOptions)
-                .then(response => response.json())
-                .then(result => console.log(result))
-                .catch(error => console.log('error', error));
-            break;
-        case "inProgress":
-            fetch(inProgressEndpoint + "/" + id, requestOptions)
-                .then(response => response.json())
-                .then(result => console.log(result))
-                .catch(error => console.log('error', error));
-            break;
-        case "done":
-            fetch(doneEndpoint + "/" + id, requestOptions)
-                .then(response => response.json())
-                .then(result => console.log(result))
-                .catch(error => console.log('error', error));
-            break;
-    }
+    let url = `${endpoint}${route}/${id}`;
 
-
+    fetch(url, requestOptions)
+        .then(response => response.json())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
 }
 
 
@@ -86,6 +71,6 @@ export default {
     getAllToDoTasks,
     getAllInProgressTasks,
     getAllDoneTasks,
-    createTask,
+    addTask,
     deleteTask
 }

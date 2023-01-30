@@ -5,8 +5,8 @@ import ToDoList from './components/ToDoList';
 import tasksService from './services/taskService';
 import InProgressList from './components/InProgressList';
 import DoneList from './components/DoneList';
-import papeleraCerrada from'./assets/papelera_blanca2.png';
-import papeleraAbierta from'./assets/papelera_blanca_abierta_2.png';
+import papeleraCerrada from './assets/papelera_blanca2.png';
+import papeleraAbierta from './assets/papelera_blanca_abierta_2.png';
 import taskService from './services/taskService';
 
 function App() {
@@ -19,15 +19,15 @@ function App() {
 
   useEffect(() => {
     tasksService.getAllToDoTasks().then(result => setTasksToDo(result))
-    .catch(error => console.log('error', error));
+      .catch(error => console.log('error', error));
 
     tasksService.getAllInProgressTasks().then(result => setTasksInProgress(result))
-    .catch(error => console.log('error', error));
+      .catch(error => console.log('error', error));
 
     tasksService.getAllDoneTasks().then(result => setTasksDone(result))
-    .catch(error => console.log('error', error));
+      .catch(error => console.log('error', error));
 
-    return () => {}
+    return () => { }
   }, [])
 
   const handleSetDescription = (event) => {
@@ -41,13 +41,13 @@ function App() {
   }
 
   const addTask = () => {
-    if(description.trim() != "") {
+    if (description.trim() != "") {
       const newTask = {
         id: uuidv4(),
         description: description,
         backgroundColor: backgroundColor
       }
-      tasksService.createTask(newTask);
+      tasksService.addTask(newTask, "/toDoTasks");
       let taskToDoCopy = [...tasksToDo];
       taskToDoCopy.push(newTask);
       setTasksToDo(taskToDoCopy);
@@ -56,37 +56,33 @@ function App() {
 
   const drop = (event) => {
     event.preventDefault();
-    const id = event.dataTransfer.getData("id");
+    const task = JSON.parse(event.dataTransfer.getData("task"));
 
     let tasksToDoCopy = [...tasksToDo];
     let tasksInProgressCopy = [...tasksInProgress];
     let tasksDoneCopy = [...tasksDone];
 
-    let toDoIndex = tasksToDoCopy.findIndex(taskInArray => taskInArray.id == id);
-    let inProgressIndex = tasksInProgressCopy.findIndex(taskInArray => taskInArray.id == id);
-    let doneIndex = tasksDoneCopy.findIndex(taskInArray => taskInArray.id == id);
-    
-    let type = "";
-    
-    if(toDoIndex >= 0) {
-      type = "toDo";
-      taskService.deleteTask(id, type);
+    let toDoIndex = tasksToDoCopy.findIndex(taskInArray => taskInArray.id == task.id);
+    let inProgressIndex = tasksInProgressCopy.findIndex(taskInArray => taskInArray.id == task.id);
+    let doneIndex = tasksDoneCopy.findIndex(taskInArray => taskInArray.id == task.id);
+
+
+    if (toDoIndex >= 0) {
+      taskService.deleteTask(task.id, "/toDoTasks");
 
       tasksToDoCopy.splice(toDoIndex, 1);
       setTasksToDo(tasksToDoCopy);
-    } 
-    
-    if(inProgressIndex >= 0) {
-      type = "inProgress";
-      taskService.deleteTask(id, type);
+    }
+
+    if (inProgressIndex >= 0) {
+      taskService.deleteTask(task.id, "/inProgressTasks");
 
       tasksInProgressCopy.splice(inProgressIndex, 1);
       setTasksInProgress(tasksInProgressCopy);
     }
 
-    if(doneIndex >= 0) {
-      type = "done";
-      taskService.deleteTask(id, type);
+    if (doneIndex >= 0) {
+      taskService.deleteTask(task.id, "/doneTasks");
 
       tasksDoneCopy.splice(doneIndex, 1);
       setTasksDone(tasksDoneCopy);
@@ -103,6 +99,91 @@ function App() {
   const closeTrash = () => {
     setImage(papeleraCerrada);
   }
+
+  const taskDrop = (event, place) => {
+    event.preventDefault();
+
+    const task = JSON.parse(event.dataTransfer.getData("task"));
+
+    let tasksToDoCopy = [...tasksToDo];
+    let tasksInProgressCopy = [...tasksInProgress];
+    let tasksDoneCopy = [...tasksDone];
+
+    let toDoIndex = tasksToDo.findIndex(taskInArray => taskInArray.id == task.id);
+    let inProgressIndex = tasksInProgress.findIndex(taskInArray => taskInArray.id == task.id);
+    let doneIndex = tasksDone.findIndex(taskInArray => taskInArray.id == task.id);
+
+    switch (place) {
+      case "toDo":
+        if (inProgressIndex >= 0) {
+          let deletedTask = tasksInProgressCopy.splice(inProgressIndex, 1);
+          setTasksInProgress(tasksInProgressCopy);
+          taskService.deleteTask(task.id, "/inProgressTasks");
+
+          tasksToDoCopy.push(deletedTask[0]);
+          setTasksToDo(tasksToDoCopy);
+          taskService.addTask(task, "/toDoTasks");
+        }
+
+        if (doneIndex >= 0) {
+          let deletedTask = tasksDoneCopy.splicetoDoTasks(doneIndex, 1);
+          setTasksDone(tasksDoneCopy);
+          taskService.deleteTask(task.id, "/doneTasks");
+          
+          tasksToDoCopy.push(deletedTask[0]);
+          setTasksToDo(tasksToDoCopy);
+          taskService.addTask(task, "/toDoTasks");
+        }
+        break;
+      case "inProgress":
+        if(toDoIndex >= 0) {
+          let deletedTask = tasksToDoCopy.splice(toDoIndex, 1);
+          setTasksToDo(tasksToDoCopy);
+          taskService.deleteTask(task.id, "/toDoTasks");
+
+          tasksInProgressCopy.push(deletedTask[0]);
+          setTasksInProgress(tasksInProgressCopy);
+          taskService.addTask(task, "/inProgressTasks");
+        }
+
+        if(doneIndex >= 0) {
+          let deletedTask = tasksDoneCopy.splice(doneIndex, 1);
+          setTasksDone(tasksDoneCopy);
+          taskService.deleteTask(task.id, "/doneTasks");
+
+          tasksInProgressCopy.push(deletedTask[0]);
+          setTasksInProgress(tasksInProgressCopy)
+          taskService.addTask(task, "/inProgressTasks");
+        }
+        break;
+      case "done":
+        if(toDoIndex >= 0) {
+          let deletedTask = tasksToDoCopy.splice(toDoIndex, 1);
+          setTasksToDo(tasksToDoCopy);
+          taskService.deleteTask(task.id, "/toDoTasks");
+
+          tasksDoneCopy.push(deletedTask[0]);
+          setTasksDone(tasksDoneCopy)
+          taskService.addTask(task, "/doneTasks");
+        }
+
+        if(inProgressIndex >= 0) {
+          let deletedTask = tasksInProgressCopy.splice(doneIndex, 1);
+          setTasksInProgress(tasksInProgressCopy);
+          taskService.deleteTask(task.id, "/inProgressTasks");
+
+          tasksDoneCopy.push(deletedTask[0]);
+          setTasksDone(tasksDoneCopy);
+          taskService.addTask(task, "/doneTasks");
+        }
+        break;
+    }
+  }
+
+  const taskAllowDrop = (event) => {
+    event.preventDefault();
+  }
+
 
 
   return (
@@ -134,7 +215,7 @@ function App() {
           </div>
           <div className="row">
             {/**To do tasks */}
-            <div className="col-12 col-lg-4">
+            <div className="col-12 col-lg-4" onDrop={() => taskDrop(event, "toDo")} onDragOver={() => taskAllowDrop(event)} >
               <h3 className='text-center tittle'>Por hacer</h3>
               <hr />
               <div className='delimiter'>
@@ -143,7 +224,7 @@ function App() {
             </div>
 
             {/**In progress tasks */}
-            <div className="col-12 col-lg-4">
+            <div className="col-12 col-lg-4" onDrop={() => taskDrop(event, "inProgress")} onDragOver={() => taskAllowDrop(event)} >
               <h3 className='text-center tittle'>En progreso</h3>
               <hr />
               <div className='delimiter'>
@@ -152,7 +233,7 @@ function App() {
             </div>
 
             {/**Done tasks */}
-            <div className="col-12 col-lg-4">
+            <div className="col-12 col-lg-4" onDrop={() => taskDrop(event, "done")} onDragOver={() => taskAllowDrop(event)} >
               <h3 className='text-center tittle'>Hecho</h3>
               <hr />
               <div>
