@@ -1,11 +1,8 @@
-
-
-const ToDoList = ({ tasksToDo, setTasksToDo }) => {
-
+const DoneList = ({ tasksDone, setTasksDone }) => {
     return(
         <>
             {
-                tasksToDo.map(({id, description, backgroundColor}) => {
+                tasksDone.map(({id, description, backgroundColor}) => {
                     return(
                         <div className="card m-4" key={id}>
                             <div className="card-body" draggable="true" style={{backgroundColor: backgroundColor, borderRadius: 6}}>
@@ -19,4 +16,4 @@ const ToDoList = ({ tasksToDo, setTasksToDo }) => {
     )
 }
 
-export default ToDoList;
+export default DoneList;
