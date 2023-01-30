@@ -51,10 +51,41 @@ const createTask = (task) => {
         .catch(error => console.log('error', error));
 }
 
+const deleteTask = (id, type) => {
+    var requestOptions = {
+        method: 'DELETE',
+        redirect: 'follow'
+    };
+
+    switch (type) {
+        case "toDo":
+            fetch(toDoEndpoint + "/" + id, requestOptions)
+                .then(response => response.json())
+                .then(result => console.log(result))
+                .catch(error => console.log('error', error));
+            break;
+        case "inProgress":
+            fetch(inProgressEndpoint + "/" + id, requestOptions)
+                .then(response => response.json())
+                .then(result => console.log(result))
+                .catch(error => console.log('error', error));
+            break;
+        case "done":
+            fetch(doneEndpoint + "/" + id, requestOptions)
+                .then(response => response.json())
+                .then(result => console.log(result))
+                .catch(error => console.log('error', error));
+            break;
+    }
+
+
+}
+
 
 export default {
     getAllToDoTasks,
     getAllInProgressTasks,
     getAllDoneTasks,
-    createTask
+    createTask,
+    deleteTask
 }

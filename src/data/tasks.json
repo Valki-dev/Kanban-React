@@ -1,33 +1,33 @@
 {
-  "toDoTasks": [
-    {
-      "id": 1000000,
-      "description": "Estudiar React",
-      "backgroundColor": "#31d2f2"
-    },
-    {
-      "id": 1000001,
-      "description": "Aprender Laravel",
-      "backgroundColor": "#31d2f2"
-    },
-    {
-      "id": "1ad17f70-2b70-483c-96d4-c24593c5eb80",
-      "description": "Terminar ejercicios empresas ",
-      "backgroundColor": "#d968b5"
-    }
-  ],
-  "inProgressTasks": [
-    {
-      "id": 2000000,
-      "description": "Proyecto Diseño de interfaces web",
-      "backgroundColor": "#31d2f2"
-    }
-  ],
-  "doneTasks": [
-    {
-      "id": 3000000,
-      "description": "Proyecto Kanban",
-      "backgroundColor": "#31d2f2"
-    }
-  ]
-}
+    "toDoTasks": [
+      {
+        "id": 1000000,
+        "description": "Estudiar React",
+        "backgroundColor": "#31d2f2"
+      },
+      {
+        "id": 1000001,
+        "description": "Aprender Laravel",
+        "backgroundColor": "#31d2f2"
+      },
+      {
+        "id": "1ad17f70-2b70-483c-96d4-c24593c5eb80",
+        "description": "Terminar ejercicios empresas ",
+        "backgroundColor": "#d968b5"
+      }
+    ],
+    "inProgressTasks": [
+      {
+        "id": 2000000,
+        "description": "Proyecto Diseño de interfaces web",
+        "backgroundColor": "#31d2f2"
+      }
+    ],
+    "doneTasks": [
+      {
+        "id": 3000000,
+        "description": "Proyecto Kanban",
+        "backgroundColor": "#31d2f2"
+      }
+    ]
+  }

@@ -3,9 +3,11 @@ import './App.css'
 import { v4 as uuidv4 } from 'uuid';
 import ToDoList from './components/ToDoList';
 import tasksService from './services/taskService';
-import papeleraCerrada from'./assets/papelera_blanca2.png';
 import InProgressList from './components/InProgressList';
 import DoneList from './components/DoneList';
+import papeleraCerrada from'./assets/papelera_blanca2.png';
+import papeleraAbierta from'./assets/papelera_blanca_abierta_2.png';
+import taskService from './services/taskService';
 
 function App() {
   const [tasksToDo, setTasksToDo] = useState([]);
@@ -13,6 +15,7 @@ function App() {
   const [tasksDone, setTasksDone] = useState([]);
   const [description, setDescription] = useState("");
   const [backgroundColor, setBackgroundColor] = useState("#31d2f2");
+  const [image, setImage] = useState(papeleraCerrada);
 
   useEffect(() => {
     tasksService.getAllToDoTasks().then(result => setTasksToDo(result))
@@ -52,15 +55,53 @@ function App() {
   }
 
   const drop = (event) => {
-    console.log();
+    event.preventDefault();
+    const id = event.dataTransfer.getData("id");
+
+    let tasksToDoCopy = [...tasksToDo];
+    let tasksInProgressCopy = [...tasksInProgress];
+    let tasksDoneCopy = [...tasksDone];
+
+    let toDoIndex = tasksToDoCopy.findIndex(taskInArray => taskInArray.id == id);
+    let inProgressIndex = tasksInProgressCopy.findIndex(taskInArray => taskInArray.id == id);
+    let doneIndex = tasksDoneCopy.findIndex(taskInArray => taskInArray.id == id);
+    
+    let type = "";
+    
+    if(toDoIndex >= 0) {
+      type = "toDo";
+      taskService.deleteTask(id, type);
+
+      tasksToDoCopy.splice(toDoIndex, 1);
+      setTasksToDo(tasksToDoCopy);
+    } 
+    
+    if(inProgressIndex >= 0) {
+      type = "inProgress";
+      taskService.deleteTask(id, type);
+
+      tasksInProgressCopy.splice(inProgressIndex, 1);
+      setTasksInProgress(tasksInProgressCopy);
+    }
+
+    if(doneIndex >= 0) {
+      type = "done";
+      taskService.deleteTask(id, type);
+
+      tasksDoneCopy.splice(doneIndex, 1);
+      setTasksDone(tasksDoneCopy);
+    }
+
+    setImage(papeleraCerrada);
   }
 
   const allowDrop = (event) => {
-
+    event.preventDefault();
+    setImage(papeleraAbierta);
   }
 
   const closeTrash = () => {
-
+    setImage(papeleraCerrada);
   }
 
 
@@ -87,7 +128,7 @@ function App() {
                 <button className='btn btn-info me-5' onClick={addTask}>Agregar nota</button>
               </div>
               <div onDrop={() => drop(event)} onDragOver={() => allowDrop(event)} onDragLeave={closeTrash} >
-                <img src={papeleraCerrada} alt="Icono no disponible" width={70} />
+                <img src={image} alt="Icono no disponible" width={70} />
               </div>
             </div>
           </div>
